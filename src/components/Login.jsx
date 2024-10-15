@@ -53,7 +53,7 @@ const Login = () => {
               <div className="bg-[#BD0000] flex items-center justify-center px-6 h-12 sm:h-full">
                 <GoAlert className="text-white  text-xl sm:text-2xl" />
               </div>
-              <div className="bg-white flex-1 p-1 sm:p-4 flex flex-col sm:flex-row justify-between items-center">
+              <div className="bg-white flex-1 p-2 sm:p-4 flex flex-col sm:flex-row justify-between items-center">
                 <span className="text-xs sm:text-sm font-medium text-center sm:text-left">
                   {alertMessage}
                 </span>
