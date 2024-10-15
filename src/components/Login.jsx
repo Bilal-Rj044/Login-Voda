@@ -49,16 +49,18 @@ const Login = () => {
             Log in
           </h1>
           {showAlert && (
-            <div className="mt-4 w-3/4 mx-auto flex items-stretch border-[1.5px] border-[#BD0000] overflow-hidden h-28">
-              <div className="bg-[#BD0000] flex items-center justify-center px-6 h-full">
-                <GoAlert className="text-white text-2xl" />
+            <div className="mt-4 w-full sm:w-3/4 md:mx-auto  mx-3 flex flex-col sm:flex-row items-stretch border-[1.5px] border-[#BD0000] overflow-hidden h-auto sm:h-32">
+              <div className="bg-[#BD0000] flex items-center justify-center px-6 h-12 sm:h-full">
+                <GoAlert className="text-white text-xl sm:text-2xl" />
               </div>
-              <div className="bg-white flex-1 p-4 flex justify-between items-center">
-                <span className="text-sm font-medium">{alertMessage}</span>
+              <div className="bg-white flex-1 p-2 sm:p-4 flex flex-col sm:flex-row justify-between items-center">
+                <span className="text-xs sm:text-sm font-medium text-center sm:text-left">
+                  {alertMessage}
+                </span>
               </div>
               <button
                 onClick={() => setShowAlert(false)}
-                className="text-white bg-[#BD0000] border-l px-2 text-xl font-bold"
+                className="text-white bg-[#BD0000] border-l px-2 text-xl font-bold h-12 sm:h-full"
               >
                 &times;
               </button>
