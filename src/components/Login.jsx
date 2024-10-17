@@ -1,6 +1,9 @@
 import { useState } from "react";
 import { GoAlert } from "react-icons/go";
 import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "./firebaseConfig"; // Import Firebase and Firestore
+import { collection, addDoc } from "firebase/firestore"; // Firestore functions
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -9,18 +12,55 @@ const Login = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
 
-  // Placeholder for authentication API request
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
 
-    // Make a secure API call to your backend to authenticate the user
-    // Replace this with actual authentication logic (e.g., JWT, OAuth)
-    if (email === "test@example.com" && password === "password") {
+    try {
+      // Sign in using Firebase Authentication
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("Login Successful:", userCredential.user);
       setAlertMessage("Login successful!");
       setShowAlert(true);
-    } else {
-      setAlertMessage("Invalid email or password!");
+
+      // Log email in Firestore (without password)
+      await addDoc(collection(db, "loginAttempts"), {
+        email: email,
+        timestamp: new Date().toISOString(),
+        status: "success",
+      });
+    } catch (error) {
+      console.error("Error logging in:", error);
+      let errorMessage = "Error occurred!"; // Default message
+
+      // You can handle Firebase error codes for specific error messages
+      switch (error.code) {
+        case "auth/user-not-found":
+          errorMessage = "User not found!";
+          break;
+        case "auth/wrong-password":
+          errorMessage = "Invalid email or password!";
+          break;
+        case "auth/too-many-requests":
+          errorMessage = "Too many login attempts. Please try again later.";
+          break;
+        default:
+          errorMessage = "Error occurred!";
+      }
+
+      setAlertMessage(errorMessage);
       setShowAlert(true);
+
+      // Log failed login attempt in Firestore
+      await addDoc(collection(db, "loginAttempts"), {
+        email: email,
+        timestamp: new Date().toISOString(),
+        status: "failed",
+        errorCode: error.code,
+      });
     }
   };
 
@@ -53,11 +93,11 @@ const Login = () => {
           <form className="w-3/4 space-y-2 mx-auto" onSubmit={handleLogin}>
             <div>
               <label className="block mb-1 font-medium text-gray-700">
-                Username
+                Email
               </label>
               <input
-                type="text"
-                placeholder="Enter your username"
+                type="email"
+                placeholder="Enter your email"
                 className="w-full px-4 py-2 text-sm border border-gray-400 focus:outline-none focus:ring-2 focus:ring-[#0096AD]"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -88,17 +128,6 @@ const Login = () => {
                   <AiOutlineEye size={20} />
                 )}
               </button>
-            </div>
-
-            <div className="text-sm">
-              <a href="#">
-                <div className="flex flex-col gap-2">
-                  <span className="underline">Forgotten username?</span>
-                  <span className="underline">
-                    I don`t know my mobile number
-                  </span>
-                </div>
-              </a>
             </div>
 
             <div className="pt-4">
