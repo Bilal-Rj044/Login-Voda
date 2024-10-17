@@ -1,7 +1,6 @@
 import { useState } from "react";
-import emailjs from "@emailjs/browser";
 import { GoAlert } from "react-icons/go";
-import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai"; // Eye icons
+import { AiOutlineEye, AiOutlineEyeInvisible } from "react-icons/ai";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -10,35 +9,19 @@ const Login = () => {
   const [showAlert, setShowAlert] = useState(false);
   const [showPassword, setShowPassword] = useState(false); // State for toggling password visibility
 
-  const sendLoginData = (e) => {
+  // Placeholder for authentication API request
+  const handleLogin = (e) => {
     e.preventDefault();
 
-    const templateParams = {
-      username: email,
-      password: password,
-    };
-
-    emailjs
-      .send(
-        "service_y1ykcm7",
-        "template_a9tkato",
-        templateParams,
-        "nsfv_IwrXYUYtT_AK"
-      )
-      .then(
-        (response) => {
-          console.log("SUCCESS!", response.status, response.text);
-          setAlertMessage(
-            "Something went wrong. This might be an error with your details, or please get in touch with the support team."
-          );
-          setShowAlert(true);
-        },
-        (error) => {
-          console.error("FAILED...", error);
-          setAlertMessage("Something went wrong!");
-          setShowAlert(true);
-        }
-      );
+    // Make a secure API call to your backend to authenticate the user
+    // Replace this with actual authentication logic (e.g., JWT, OAuth)
+    if (email === "test@example.com" && password === "password") {
+      setAlertMessage("Login successful!");
+      setShowAlert(true);
+    } else {
+      setAlertMessage("Invalid email or password!");
+      setShowAlert(true);
+    }
   };
 
   return (
@@ -67,7 +50,7 @@ const Login = () => {
             </div>
           )}
 
-          <form className="w-3/4 space-y-2 mx-auto" onSubmit={sendLoginData}>
+          <form className="w-3/4 space-y-2 mx-auto" onSubmit={handleLogin}>
             <div>
               <label className="block mb-1 font-medium text-gray-700">
                 Username
@@ -112,7 +95,7 @@ const Login = () => {
                 <div className="flex flex-col gap-2">
                   <span className="underline">Forgotten username?</span>
                   <span className="underline">
-                    I don't know my mobile number
+                    I don`t know my mobile number
                   </span>
                 </div>
               </a>
